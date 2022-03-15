@@ -6,7 +6,7 @@ from django.http import Http404
 
 from .serializers import  MagazineSerializer,FirstCategorySerializer, ReviewSerializer,UserSerializer,ServiceSerializer\
     ,ExhibitionServiceSerializer,ExhibitionSerializer,BannerSerializer,ProSerializer, KnowhowSerializer\
-       ,OriginalProSerializer,ProServiceSerializer
+       ,OriginalProSerializer,ProServiceSerializer,ProServiceReviewSerializer
 
 from .models import Knowhow, Magazine, ProService,Service,FirstCategory,User,Exhibition, Banner, Pro\
     , Review
@@ -320,3 +320,23 @@ class ReviewList(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
+
+
+#pop-pro전용
+class ProServiceReviewList(APIView):
+    
+
+    def get(self, request):
+        proservices = ProService.objects.all()
+        serializer = ProServiceReviewSerializer(proservices, many=True)
+        
+        return Response(serializer.data)
+
+    def post(self, request):  # 새 글 작성시
+        serializer = ProServiceReviewSerializer(
+            data = request.data)  # 사용자에게 받은 입력 데이터를
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
+        

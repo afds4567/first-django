@@ -1,6 +1,7 @@
 from pyexpat import model
 from rest_framework import serializers
 from .models import Magazine,FirstCategory, ProService, Review,Service, Exhibition, User, Banner,Pro, Knowhow
+from django.db.models import Avg,Count
 
 #Banner
 class BannerSerializer(serializers.ModelSerializer):
@@ -105,7 +106,7 @@ class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
         fields = '__all__'
-        depth = 2
+        #depth = 2
 
 
 #Knowhow
@@ -117,26 +118,28 @@ class KnowhowSerializer(serializers.ModelSerializer):
         model = Knowhow
         fields = ( 'id','name','coverImageUrl','pro','service')
 
+
+
+#Rating 계산용
+class ProServiceReviewSerializer(serializers.ModelSerializer):
+    pro = ProSerializer( read_only=True)
+    service = TinyServiceSerializer(read_only=True)
+    class Meta:
+        model = ProService
+        fields = ('pro','service','avg_rating','review_count')
+        #ordering = ('-avg_rating',)
+
+    avg_rating   = serializers.SerializerMethodField()
+    review_count = serializers.SerializerMethodField()
+    def get_avg_rating(self, ob):
+        # reverse lookup on Reviews using item field
+        return ob.reviews.all().aggregate(Avg('rating'))['rating__avg']
+        #return ob.reviews.all().annotate(Avg('rating'))['avg_rating']
+
+    def get_total_reviews(self, ob):
+        # reverse lookup on Reviews using item field
+        return ob.reviews.all().aggregate(Count('rating'))
+        #return ob.reviews.all().annotate(Avg('rating'))['avg_rating']
+
     
-    
-
-
-#knowhow-custom
-# class KnowhowSerializer(serializers.ModelSerializer):
-#     users = TinyUserSerializer(many=True, read_only=True)
-#     pros = TinyProSerializer(many=True, read_only=True)
-
-#     def create(self, validated_data):
-#         users_data = validated_data.pop("users")
-#         pros_data = validated_data.pop("pros")
-#         knowhow = Knowhow.objects.create(**validated_data)
-#         # for user_data in users_data:
-#         #     User.objects.create(knowhow=knowhow, user=user_data)
-#         for pro_data in pros_data:
-#             Pro.objects.create(knowhow=knowhow, pros=pro_data)
-#         return Knowhow
-
-#     class Meta:
-#         model = Knowhow
-#         fields = ["id", "name", "coverImageUrl","created_at","users","pros"]
 

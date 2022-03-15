@@ -53,7 +53,7 @@ class Service(models.Model):
 class Review(models.Model):
     review_id       = models.AutoField(primary_key=True)
     writer          = models.ForeignKey('User', on_delete=models.CASCADE)
-    proservice      = models.ForeignKey('ProService',on_delete=models.CASCADE)
+    proservice      = models.ForeignKey('ProService',on_delete=models.CASCADE,related_name='reviews')
     content         = models.CharField(max_length=200,default="Good")
     rating          = models.DecimalField(max_digits=2, decimal_places=1)
     created_at      = models.DateTimeField(auto_now_add=True)
