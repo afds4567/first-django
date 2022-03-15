@@ -1,8 +1,8 @@
 from django.urls import path
 from rest_framework.urlpatterns import format_suffix_patterns
-from .views import MagazineList,FirstCategoryList,ServiceList,ServiceDetail,\
+from .views import MagazineList,FirstCategoryList, ReviewList,ServiceList,ServiceDetail,\
     UserList,ExhibitionServiceList,ExhibitionList,BannerList,FirstCategoryDetail\
-        ,ProList,KnowhowList
+        ,ProList,KnowhowList,OriginalProList,ProServiceList
 
 urlpatterns=[
     path('banner/',BannerList.as_view()),
@@ -15,8 +15,9 @@ urlpatterns=[
     path('exhibitionservice/', ExhibitionServiceList.as_view()),
     path('exhibition/', ExhibitionList.as_view()),
     path('user/', UserList.as_view()),
-    path('pro/', ProList.as_view()),
-    
+    path('pro/', OriginalProList.as_view()),
+    path('proservice/', ProServiceList.as_view()),
+    path('review/', ReviewList.as_view()),
     path('knowhow/', KnowhowList.as_view())
 ]
 

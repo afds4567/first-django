@@ -4,11 +4,12 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.http import Http404
 
-from .serializers import  MagazineSerializer,FirstCategorySerializer,UserSerializer,ServiceSerializer\
+from .serializers import  MagazineSerializer,FirstCategorySerializer, ReviewSerializer,UserSerializer,ServiceSerializer\
     ,ExhibitionServiceSerializer,ExhibitionSerializer,BannerSerializer,ProSerializer, KnowhowSerializer\
-       
+       ,OriginalProSerializer,ProServiceSerializer
 
-from .models import Knowhow, Magazine,Service,FirstCategory,User,Exhibition, Banner, Pro, Knowhow
+from .models import Knowhow, Magazine, ProService,Service,FirstCategory,User,Exhibition, Banner, Pro\
+    , Review
 
 # Create your views here.
 
@@ -135,6 +136,24 @@ class UserList(APIView):
 
 
 #Pro
+class OriginalProList(APIView):
+
+    def get(self, request):
+        Pros = Pro.objects.all()
+
+        serializer = OriginalProSerializer(Pros, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):  # 새 글 작성시
+        serializer = OriginalProSerializer(
+            data = request.data)  # 사용자에게 받은 입력 데이터를
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
+
+
+
 class ProList(APIView):
 
     def get(self, request):
@@ -145,6 +164,23 @@ class ProList(APIView):
 
     def post(self, request):  # 새 글 작성시
         serializer = ProSerializer(
+            data = request.data)  # 사용자에게 받은 입력 데이터를
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
+
+
+class ProServiceList(APIView):
+
+    def get(self, request):
+        Pros = ProService.objects.all()
+
+        serializer = ProServiceSerializer(Pros, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):  # 새 글 작성시
+        serializer = ProServiceSerializer(
             data = request.data)  # 사용자에게 받은 입력 데이터를
         if serializer.is_valid():
             serializer.save()
@@ -260,6 +296,25 @@ class KnowhowList(APIView):
 
     def post(self, request):  # 새 글 작성시
         serializer = KnowhowSerializer(
+            data = request.data)  # 사용자에게 받은 입력 데이터를
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
+
+
+#Review
+class ReviewList(APIView):
+
+
+    def get(self, request):
+        reviews = Review.objects.all()
+
+        serializer = ReviewSerializer(reviews, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):  # 새 글 작성시
+        serializer = ReviewSerializer(
             data = request.data)  # 사용자에게 받은 입력 데이터를
         if serializer.is_valid():
             serializer.save()

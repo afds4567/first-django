@@ -38,7 +38,7 @@ class SecondCategory(models.Model):
 
 class Service(models.Model):
     service_id      = models.AutoField(primary_key=True)
-    pro             = models.ForeignKey('Pro',null=True,on_delete=models.CASCADE)    
+    #pro             = models.ForeignKey('Pro',null=True,on_delete=models.CASCADE)    
     second_category = models.ForeignKey(SecondCategory,on_delete=models.CASCADE)
     exhibition      = models.ForeignKey('Exhibition', related_name='services',null=True, on_delete=models.CASCADE)
     service_name    = models.CharField(max_length=20)
@@ -48,6 +48,19 @@ class Service(models.Model):
     class Meta:
         db_table = "services"
         ordering = ['-request_count']
+
+
+class Review(models.Model):
+    review_id       = models.AutoField(primary_key=True)
+    writer          = models.ForeignKey('User', on_delete=models.CASCADE)
+    proservice      = models.ForeignKey('ProService',on_delete=models.CASCADE)
+    content         = models.CharField(max_length=200,default="Good")
+    rating          = models.DecimalField(max_digits=2, decimal_places=1)
+    created_at      = models.DateTimeField(auto_now_add=True)
+    updated_at      = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = "reviews"
 
 
 class User(models.Model):
@@ -73,7 +86,7 @@ class Pro(models.Model):
     user            = models.OneToOneField('User', on_delete=models.CASCADE)
     #service        = models.ForeignKey('Service',on_delete=models.CASCADE)
     address         = models.ForeignKey('Address',on_delete=models.CASCADE, null=True)
-    company_name    = models.CharField(max_length=100, null=True,default='user.name')
+    company_name    = models.CharField(max_length=100, null=True)
     is_safe_payment = models.BooleanField( default=False)
     pro_description = models.CharField(max_length=200,default="소개글이 없습니다")
     hired_count     = models.IntegerField(default=0)
@@ -85,6 +98,19 @@ class Pro(models.Model):
 
     def __str__(self):
         return self.company_name
+
+
+class ProService(models.Model):
+    proservice_id  = models.AutoField(primary_key=True)
+    pro            = models.ForeignKey(Pro, on_delete=models.CASCADE)
+    service        = models.ForeignKey(Service, on_delete=models.CASCADE)
+    is_main        = models.BooleanField(default=False)
+
+    class Meta:
+        unique_together = ('pro','service')
+
+    #rating        = models.FloatField(default=0)
+    #review_count
 
 
 class Address(models.Model):

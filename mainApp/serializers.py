@@ -1,6 +1,6 @@
 from pyexpat import model
 from rest_framework import serializers
-from .models import Magazine,FirstCategory,Service, Exhibition, User, Banner,Pro, Knowhow
+from .models import Magazine,FirstCategory, ProService, Review,Service, Exhibition, User, Banner,Pro, Knowhow
 
 #Banner
 class BannerSerializer(serializers.ModelSerializer):
@@ -72,6 +72,12 @@ class TinyUserSerializer(serializers.ModelSerializer):
         fields = ("user_id", "name", "profile_image")
 
 #Pro
+class OriginalProSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Pro
+        fields = '__all__'
+
+
 class ProSerializer(serializers.ModelSerializer):
     name          = serializers.CharField(source='user.name')
     profile_image = serializers.URLField(source='user.profile_image')
@@ -87,6 +93,19 @@ class TinyProSerializer(serializers.ModelSerializer):
         model = Pro
         fields = ["pro_id", "pro_description","service"]
 
+
+class ProServiceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProService
+        fields = '__all__'
+
+
+#Review
+class ReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Review
+        fields = '__all__'
+        depth = 2
 
 
 #Knowhow
