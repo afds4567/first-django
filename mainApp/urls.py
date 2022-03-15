@@ -9,7 +9,7 @@ urlpatterns=[
     #path('review/<char:name>/', ReviewDetail.as_view()),
     path('category/', FirstCategoryList.as_view()),
     path('category/<int:pk>/', FirstCategoryDetail.as_view()),
-    path('magazine/?format=json/', MagazineList.as_view()),
+    path('magazine/', MagazineList.as_view()),
     path('service/', ServiceList.as_view()),
     path('service/<int:pk>/', ServiceDetail.as_view()),
     path('exhibitionservice/', ExhibitionServiceList.as_view()),
