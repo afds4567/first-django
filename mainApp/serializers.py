@@ -109,7 +109,7 @@ class ReviewSerializer(serializers.ModelSerializer):
         #depth = 2
 
 
-#Knowhow
+#Knowhow => 메인화면 노하우 소개
 class KnowhowSerializer(serializers.ModelSerializer):
     #users = TinyUserSerializer(many=True, read_only=True)
     pro     = ProSerializer( read_only=True)
@@ -120,7 +120,7 @@ class KnowhowSerializer(serializers.ModelSerializer):
 
 
 
-#Rating 계산용
+#Rating 계산용 => 메인화면 인기 고수 소개 
 class ProServiceReviewSerializer(serializers.ModelSerializer):
     pro = ProSerializer( read_only=True)
     service = TinyServiceSerializer(read_only=True)
@@ -136,9 +136,9 @@ class ProServiceReviewSerializer(serializers.ModelSerializer):
         return ob.reviews.all().aggregate(Avg('rating'))['rating__avg']
         #return ob.reviews.all().annotate(Avg('rating'))['avg_rating']
 
-    def get_total_reviews(self, ob):
+    def get_review_count(self, ob):
         # reverse lookup on Reviews using item field
-        return ob.reviews.all().aggregate(Count('rating'))
+        return ob.reviews.all().aggregate(Count('rating'))['rating__count']
         #return ob.reviews.all().annotate(Avg('rating'))['avg_rating']
 
     

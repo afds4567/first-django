@@ -99,12 +99,15 @@ class Pro(models.Model):
     def __str__(self):
         return self.company_name
 
-
+#여러 서비스 제공하는 고수 서비스 중 각각에 대한 정보  
 class ProService(models.Model):
     proservice_id  = models.AutoField(primary_key=True)
     pro            = models.ForeignKey(Pro, on_delete=models.CASCADE)
     service        = models.ForeignKey(Service, on_delete=models.CASCADE)
     is_main        = models.BooleanField(default=False)
+    status         = models.CharField(default="inprogress",max_length=20)
+    price          = models.IntegerField(default=10000, null=True)
+    item_img       = models.URLField(null=True)
 
     class Meta:
         unique_together = ('pro','service')
@@ -151,7 +154,7 @@ class Exhibition(models.Model):
 class Knowhow(models.Model):
     id             = models.AutoField(primary_key=True)
     name           = models.CharField(max_length=100)
-    service        = models.OneToOneField(Service, related_name='services', on_delete=models.CASCADE)
-    pro            = models.OneToOneField(Pro, related_name='pros', on_delete=models.CASCADE)
+    service        = models.OneToOneField(Service, related_name='services', on_delete=models.CASCADE,null=True)
+    pro            = models.OneToOneField(Pro, related_name='pros', on_delete=models.CASCADE,null=True)
     coverImageUrl  = models.URLField()
     created_at     = models.DateTimeField(auto_now_add=True)
