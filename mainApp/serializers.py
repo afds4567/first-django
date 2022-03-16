@@ -100,6 +100,10 @@ class TinyProSerializer(serializers.ModelSerializer):
         model = Pro
         fields = ["pro_id", "pro_description","service"]
 
+class SerachProSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Pro
+        fields = ["pro_id", "company_name", "pro_description","hired_count","is_safe_payment"]
 
 class ProServiceSerializer(serializers.ModelSerializer):
     class Meta:
@@ -110,10 +114,11 @@ class ProServiceSerializer(serializers.ModelSerializer):
 
 #Review
 class ReviewSerializer(serializers.ModelSerializer):
+    name = serializers.CharField(source='writer.name')
     class Meta:
         model = Review
-        fields = '__all__'
-        #depth = 2
+        fields = ['name','proservice','content','rating']
+        #depth = 1
 
 
 #Knowhow => 메인화면 노하우 소개
@@ -129,12 +134,13 @@ class KnowhowSerializer(serializers.ModelSerializer):
 
 #Rating 계산용 => 메인화면 인기 고수 소개 
 class ProServiceReviewSerializer(serializers.ModelSerializer):
-    pro = ProSerializer( read_only=True)
-    service = TinyServiceSerializer(read_only=True)
+    pro          = ProSerializer( read_only=True)
+    service      = TinyServiceSerializer(read_only=True)
+    
     class Meta:
-        model = ProService
-        fields = ('pro','service','avg_rating','review_count')
-        #ordering = ('-avg_rating',)
+        model   = ProService
+        fields  = ('pro','service','avg_rating','review_count')
+        depth   = 1
 
     avg_rating   = serializers.SerializerMethodField()
     review_count = serializers.SerializerMethodField()
@@ -145,7 +151,38 @@ class ProServiceReviewSerializer(serializers.ModelSerializer):
     def get_review_count(self, ob):
         # reverse lookup on Reviews using item field
         return ob.reviews.all().aggregate(Count('rating'))['rating__count']
+    
+    def create(self, validated_data):
+        reviews_data = validated_data.pop('reviews')
+        proservice = proservice.objects.create(**validated_data)
+        for review_data in reviews_data:
+            Review.objects.create(proservice=proservice, **review_data)
+        return ProService
+
+
+class GosuFinderSerializer(serializers.ModelSerializer):
+    pro          = SerachProSerializer( read_only=True)
+    reviews       = ReviewSerializer(many=True)
+    class Meta:
+        model   = ProService
+        fields  = ('pro','avg_rating','review_count','reviews')
         
 
+    avg_rating   = serializers.SerializerMethodField()
+    review_count = serializers.SerializerMethodField()
+    def get_avg_rating(self, ob):
+        # reverse lookup on Reviews using item field
+        return ob.reviews.all().aggregate(Avg('rating'))['rating__avg']
+        
+    def get_review_count(self, ob):
+        # reverse lookup on Reviews using item field
+        return ob.reviews.all().aggregate(Count('rating'))['rating__count']
+
+    def create(self, validated_data):
+        reviews_data = validated_data.pop('reviews')
+        proservice = proservice.objects.create(**validated_data)
+        for review_data in reviews_data:
+            Review.objects.create(proservice=proservice, **review_data)
+        return ProService
     
 

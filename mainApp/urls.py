@@ -3,7 +3,7 @@ from rest_framework.urlpatterns import format_suffix_patterns
 from .views import MagazineList,FirstCategoryList, ReviewList,ServiceList,ServiceDetail,\
     UserList,ExhibitionServiceList,ExhibitionList,BannerList,FirstCategoryDetail\
         ,ProList,KnowhowList,OriginalProList,ProServiceList,ProServiceReviewList\
-            ,AddressList
+            ,AddressList,GosuFinderList
 
 urlpatterns=[
     path('banner/',BannerList.as_view()),
@@ -22,6 +22,7 @@ urlpatterns=[
     path('knowhow/', KnowhowList.as_view()),
     path('popular-pro/', ProServiceReviewList.as_view()),
     path('address/', AddressList.as_view()),
+    path('gosufind/', GosuFinderList.as_view()),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

@@ -6,7 +6,7 @@ from django.http import Http404
 
 from .serializers import  MagazineSerializer,FirstCategorySerializer, ReviewSerializer,UserSerializer,ServiceSerializer\
     ,ExhibitionServiceSerializer,ExhibitionSerializer,BannerSerializer,ProSerializer, KnowhowSerializer\
-       ,OriginalProSerializer,ProServiceSerializer,ProServiceReviewSerializer,AddressSerializer
+       ,OriginalProSerializer,ProServiceSerializer,ProServiceReviewSerializer,AddressSerializer,GosuFinderSerializer
 
 from .models import Address, Knowhow, Magazine, ProService,Service,FirstCategory,User,Exhibition, Banner, Pro\
     , Review
@@ -355,4 +355,16 @@ class ProServiceReviewList(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
+
+
+#pro-serch
+class GosuFinderList(APIView):
+    
+
+    def get(self, request):
+        proservices = ProService.objects.all()
+        serializer = GosuFinderSerializer(proservices, many=True)
         
+        return Response(serializer.data)
+
+    
