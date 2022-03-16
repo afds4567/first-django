@@ -165,7 +165,7 @@ class GosuFinderSerializer(serializers.ModelSerializer):
     reviews       = ReviewSerializer(many=True)
     class Meta:
         model   = ProService
-        fields  = ('pro','avg_rating','review_count','reviews')
+        fields  = ('pro','item_img','avg_rating','review_count','reviews')
         
 
     avg_rating   = serializers.SerializerMethodField()
