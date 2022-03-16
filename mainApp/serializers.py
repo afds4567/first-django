@@ -99,6 +99,7 @@ class ProServiceSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProService
         fields = '__all__'
+        depth =1
 
 
 #Review
