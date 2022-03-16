@@ -82,11 +82,10 @@ class OriginalProSerializer(serializers.ModelSerializer):
 class ProSerializer(serializers.ModelSerializer):
     name          = serializers.CharField(source='user.name')
     profile_image = serializers.URLField(source='user.profile_image')
-    #service_name = serializers.CharField(source='service.service_name')
     
     class Meta:
         model = Pro
-        fields = ( 'name','profile_image') #'service_name')
+        fields = ( 'name','profile_image') 
 
 
 class TinyProSerializer(serializers.ModelSerializer):
@@ -135,12 +134,11 @@ class ProServiceReviewSerializer(serializers.ModelSerializer):
     def get_avg_rating(self, ob):
         # reverse lookup on Reviews using item field
         return ob.reviews.all().aggregate(Avg('rating'))['rating__avg']
-        #return ob.reviews.all().annotate(Avg('rating'))['avg_rating']
-
+        
     def get_review_count(self, ob):
         # reverse lookup on Reviews using item field
         return ob.reviews.all().aggregate(Count('rating'))['rating__count']
-        #return ob.reviews.all().annotate(Avg('rating'))['avg_rating']
+        
 
     
 
