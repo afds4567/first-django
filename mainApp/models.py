@@ -61,6 +61,7 @@ class Review(models.Model):
 
     class Meta:
         db_table = "reviews"
+        ordering  = ('proservice',)
 
 
 class User(models.Model):
