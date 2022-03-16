@@ -108,7 +108,7 @@ class ProService(models.Model):
     status         = models.CharField(default="inprogress",max_length=20)
     price          = models.IntegerField(default=10000, null=True)
     item_img       = models.URLField(null=True)
-
+    item_name      = models.CharField(max_length=100, null=True)
     class Meta:
         unique_together = ('pro','service')
 
