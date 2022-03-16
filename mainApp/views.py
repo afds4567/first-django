@@ -6,9 +6,9 @@ from django.http import Http404
 
 from .serializers import  MagazineSerializer,FirstCategorySerializer, ReviewSerializer,UserSerializer,ServiceSerializer\
     ,ExhibitionServiceSerializer,ExhibitionSerializer,BannerSerializer,ProSerializer, KnowhowSerializer\
-       ,OriginalProSerializer,ProServiceSerializer,ProServiceReviewSerializer
+       ,OriginalProSerializer,ProServiceSerializer,ProServiceReviewSerializer,AddressSerializer
 
-from .models import Knowhow, Magazine, ProService,Service,FirstCategory,User,Exhibition, Banner, Pro\
+from .models import Address, Knowhow, Magazine, ProService,Service,FirstCategory,User,Exhibition, Banner, Pro\
     , Review
 
 # Create your views here.
@@ -135,6 +135,22 @@ class UserList(APIView):
         return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
 
 
+#Address
+class AddressList(APIView):
+
+    def get(self, request):
+        address = Address.objects.all()
+
+        serializer = AddressSerializer(address, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):  # 새 글 작성시
+        serializer = AddressSerializer(
+            data = request.data)  # 사용자에게 받은 입력 데이터를
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
 #Pro
 class OriginalProList(APIView):
 

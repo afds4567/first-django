@@ -1,6 +1,6 @@
 from pyexpat import model
 from rest_framework import serializers
-from .models import Magazine,FirstCategory, ProService, Review,Service, Exhibition, User, Banner,Pro, Knowhow
+from .models import Magazine,FirstCategory,Address, ProService, Review,Service, Exhibition, User, Banner,Pro, Knowhow
 from django.db.models import Avg,Count
 
 #Banner
@@ -17,6 +17,13 @@ class MagazineSerializer(serializers.ModelSerializer):
         fields = ('id', 'title','linkUrl', 'imageUrl')
 
 
+#Address
+class AddressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Address
+        fields = ( '__all__')
+
+        
 #최상단 카테고리
 class FirstCategorySerializer(serializers.ModelSerializer):
     class Meta:
